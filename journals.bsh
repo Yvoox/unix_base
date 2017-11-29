@@ -1,0 +1,149 @@
+#!/bin/bash
+
+if [ -d TpCOL ]
+then 
+	cd TpCOL
+else 
+	mkdir TpCOL
+	cd TpCOL
+fi
+
+if [ ! -f rapport.txt ] 
+then touch rapport.txt
+fi
+
+
+i=1
+
+
+#	Pour -p et -j protection des téléchargements sauvages changement du name.txt à gérer
+# checktel(){	
+	# if [ -f "/home/TpCOL/$name.txt" ]
+	# then 
+	# else #téléchargement
+	# fi
+# }
+
+
+
+while [ i != $# ] #boucle qui parcourt toute les arguments de la commande
+
+do
+	j=i+1 #$j servira à la récupération de l'argument suivant pour les fonctions nécessitant
+	
+	if [ $i = "-i" ] 
+	#initialisation
+	then 
+		    if [ -f index.html ]
+		then 
+				mv index.html ~
+			fi
+			if [ -f rapport.txt ]
+				then 
+					mv rapport.txt ~
+			fi
+			
+			cd ~
+			mv TpCOL /dev/NULL
+			mkdir TpCOL
+		    if [ -f index.hml ]
+		 then 
+					mv index.html ~/TpCOL
+				fi
+			if [ -f rapport.txt ]
+				then 
+					mv rapport.txt ~/TpCOL
+				fi
+			cd TpCOL
+	
+	elif [ $i = "-c" ] #effacement des téléchargements
+	then
+			if [ -f asm.txt ] 
+				then 
+					mv asm.txt /dev/NULL
+				elif [ -f iucr.txt ] 
+				then
+					mv iucr.txt /dev/NULL
+				elif [ -f aip.txt ] 
+				then
+					mv aip.txt /dev/NULL
+				
+			fi
+	        
+	
+	elif [ $i = "-p" ] #téléchargement liste journeaux par nom ou all
+	then
+			
+			if [ $j == 4 || $j == 'asm' ]
+			then 
+				name='asm'
+			
+				
+			elif [ $j == 5 || $j == 'iucr' ]
+			then 
+				name='iucr'
+			
+				
+			elif [ $j == 9 || $j == 'aip' ]
+			then
+				name='aip'
+				
+			elif [ $j == 0 || $j =='all' ]
+			then
+				name='all'
+				
+			else return 0
+			fi
+			
+			if [ -f $name + ".txt" ] #controle du téléchargement
+			then 
+				return 0
+			fi
+			
+			if [ $name == 'asm' ]
+			then 
+				curl -o $name.html http://journals.asm.org/
+				
+			elif [ $name == 'iucr' ]
+			then	
+				curl -o $name.html http://journals.iucr.org/
+			elif [ $name == 'aip' ]
+			then
+				curl -o $name.html http://scitation.aip.org/content/aip
+			
+			elif [ $name == 'all' ]
+			then
+				curl -o $name.html http://journals.asm.org/
+				curl -o $name.html http://journals.iucr.org/
+				curl -o $name.html http://scitation.aip.org/content/aip/
+			fi
+	
+	
+	elif [ $i = "-e" ] #Extraction des pages des éditeurs dont page téléchargée
+	then
+	        echo "Hé Jean, ça va ?"
+	
+	elif [ $i = "-j" ] #Téléchargement de la page Aims scopes des éditeurs extrait
+	then
+			id=$j
+			
+	        echo "Hé Jean, ça va ?"
+	
+	elif [ $i = "-a" ] #analyse des pages des journaux précédemment téléchargés avec aims scopes
+	then
+	        echo "Hé Jean, ça va ?"
+	
+	elif [ $i = "-h" ] #creation de la page web avec nom de page
+	then
+			page=$j
+			
+	        echo "Hé Jean, ça va ?"
+	
+	else
+			return 0
+			
+	fi
+	
+	i=i+1
+	
+done 
